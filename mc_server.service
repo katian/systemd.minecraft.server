@@ -1,0 +1,49 @@
+# /etc/systemd/system/mc_server.service
+[Unit]
+Description=Minecraft server
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mc_user/mc_server
+
+User=mc_user
+Group=mc_user
+
+Nice=+0
+
+### 2020-1104 : mc_user
+
+### 2020-0223 : https://linuxconfig.org/how-to-setup-minecraft-server-on-ubuntu-18-04-bionic-beaver-linux
+
+ExecStart=/usr/bin/screen -DmS mc_server /usr/bin/java -Xmx3G -Xms3G -jar /home/mc_user/mc_server/server.jar nogui
+
+###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "say SERVER SHUTTING DOWN IN 5 SECONDS. SAVING ALL MAPS..."
+###ExecStop=/bin/sleep 5
+###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "save-all"
+###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "stop"
+###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "stop"
+ExecStop=/usr/bin/screen -p 0 -S mc_server -X eval 'stuff \"save-all\"\015'
+ExecStop=/usr/bin/screen -p 0 -S mc_server -X eval 'stuff \"stop\"\015'
+
+### 2020-0223 : https://unix.stackexchange.com/questions/302733/minecraft-server-startup-shutdown-with-systemd
+
+ExecStop=/bin/bash -c "while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done"
+
+### 2020-0223 : a tester
+###ExecStop=/bin/bash -c "tail --pid=$MAINPID -f /dev/null"
+
+TimeoutStopSec=180
+
+PrivateTmp=yes
+ProtectHostname=true
+
+CapabilityBoundingSet=~CAP_SYS_BOOT
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+CapabilityBoundingSet=~CAP_SYS_PTRACE
+
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/mc_server.service.d/override.conf
+#PrivateTmp=yes
