@@ -37,6 +37,8 @@ ExecStop=/bin/bash -c "while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done"
 
 TimeoutStopSec=180
 
+### 2020-1105 : (security) $ systemd-analyze security mc_server.service
+
 PrivateTmp=yes
 ProtectHostname=true
 
