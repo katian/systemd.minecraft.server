@@ -12,6 +12,8 @@ Group=mc_user
 
 Nice=+0
 
+### 2020-1105 : (edit) $ sudo systemctl edit mc_server.service --full
+
 ### 2020-1104 : mc_user
 
 ### 2020-0223 : https://linuxconfig.org/how-to-setup-minecraft-server-on-ubuntu-18-04-bionic-beaver-linux
