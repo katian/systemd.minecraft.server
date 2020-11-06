@@ -1,1 +1,1 @@
-# minecraft systemd service
+# Minecraft server using systemd and screen
