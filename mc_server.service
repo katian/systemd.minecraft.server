@@ -1,4 +1,4 @@
-# /etc/systemd/system/mc_server.service
+# /home/mc_user/.config/systemd/user/mc_server.service
 [Unit]
 Description=Minecraft server
 After=network-online.target
@@ -7,14 +7,9 @@ After=network-online.target
 Type=simple
 WorkingDirectory=/home/mc_user/mc_server
 
-User=mc_user
-Group=mc_user
-
 Nice=+0
 
-### 2020-1105 : (edit) $ sudo systemctl edit mc_server.service --full
-
-### 2020-1104 : mc_user
+### 2020-1105 : (edit) $ systemctl --user edit mc_server.service --full
 
 ### 2020-0223 : https://linuxconfig.org/how-to-setup-minecraft-server-on-ubuntu-18-04-bionic-beaver-linux
 
@@ -40,14 +35,50 @@ TimeoutStopSec=180
 ### 2020-1105 : (security) $ systemd-analyze security mc_server.service
 
 PrivateTmp=yes
-ProtectHostname=true
 
-CapabilityBoundingSet=~CAP_SYS_BOOT
 CapabilityBoundingSet=~CAP_SYS_ADMIN
 CapabilityBoundingSet=~CAP_SYS_PTRACE
+CapabilityBoundingSet=~CAP_SETUID
+CapabilityBoundingSet=~CAP_SETGID
+CapabilityBoundingSet=~CAP_SETPCAP
+CapabilityBoundingSet=~CAP_CHOWN
+CapabilityBoundingSet=~CAP_FSETID
+CapabilityBoundingSet=~CAP_SETFCAP
+CapabilityBoundingSet=~CAP_NET_ADMIN
+CapabilityBoundingSet=~CAP_SYS_MODULE
+CapabilityBoundingSet=~CAP_SYS_TIME
+
+PrivateDevices=yes
+PrivateUsers=yes
+
+ProtectControlGroups=yes
+ProtectHome=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectSystem=yes
+
+###SystemCallFilter=~@clock
+###SystemCallFilter=~@debug
+###SystemCallFilter=~@module
+###SystemCallFilter=~@mount
+###SystemCallFilter=~@raw-io
+###SystemCallFilter=~@reboot
+###SystemCallFilter=~@swap
+###SystemCallFilter=~@privileged
+###SystemCallFilter=~@resources
+
+CapabilityBoundingSet=~CAP_KILL
+
+CapabilityBoundingSet=~CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=~CAP_NET_BROADCAST
+CapabilityBoundingSet=~CAP_NET_RAW
+CapabilityBoundingSet=~CAP_SYS_NICE
+CapabilityBoundingSet=~CAP_SYS_RESOURCE
+
+
+
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 
-# /etc/systemd/system/mc_server.service.d/override.conf
-#PrivateTmp=yes
