@@ -1,84 +1,24 @@
 # /home/mc_user/.config/systemd/user/mc_server.service
 [Unit]
-Description=Minecraft server
-After=network-online.target
+Description=Minecraft Server
 
 [Service]
 Type=simple
 WorkingDirectory=/home/mc_user/mc_server
-
-Nice=+0
-
-### 2020-1105 : (edit) $ systemctl --user edit mc_server.service --full
-
-### 2020-0223 : https://linuxconfig.org/how-to-setup-minecraft-server-on-ubuntu-18-04-bionic-beaver-linux
-
-ExecStart=/usr/bin/screen -DmS mc_server /usr/bin/java -Xmx3G -Xms3G -jar /home/mc_user/mc_server/server.jar nogui
-
-###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "say SERVER SHUTTING DOWN IN 5 SECONDS. SAVING ALL MAPS..."
-###ExecStop=/bin/sleep 5
-###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "save-all"
-###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "stop"
-###ExecStop=/usr/bin/screen -p 0 -S mc_server -X stuff "stop"
-ExecStop=/usr/bin/screen -p 0 -S mc_server -X eval 'stuff \"save-all\"\015'
-ExecStop=/usr/bin/screen -p 0 -S mc_server -X eval 'stuff \"stop\"\015'
-
-### 2020-0223 : https://unix.stackexchange.com/questions/302733/minecraft-server-startup-shutdown-with-systemd
-
-ExecStop=/bin/bash -c "while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done"
-
-### 2020-0223 : a tester
-###ExecStop=/bin/bash -c "tail --pid=$MAINPID -f /dev/null"
+ExecStart=java -Xmx3G -Xms3G -jar /home/mc_user/mc_server/server.jar nogui
+ExecStop=/bin/bash -c 'echo "arret du serveur"'
+ExecStop=/bin/bash -c 'echo /save-all > /tmp/mc_server.stdin'
+ExecStop=/bin/bash -c 'echo /stop > /tmp/mc_server.stdin'
+ExecStop=/bin/bash -c 'while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done'
 
 TimeoutStopSec=180
 
-### 2020-1105 : (security) $ systemd-analyze security mc_server.service
-
-PrivateTmp=yes
-
-CapabilityBoundingSet=~CAP_SYS_ADMIN
-CapabilityBoundingSet=~CAP_SYS_PTRACE
-CapabilityBoundingSet=~CAP_SETUID
-CapabilityBoundingSet=~CAP_SETGID
-CapabilityBoundingSet=~CAP_SETPCAP
-CapabilityBoundingSet=~CAP_CHOWN
-CapabilityBoundingSet=~CAP_FSETID
-CapabilityBoundingSet=~CAP_SETFCAP
-CapabilityBoundingSet=~CAP_NET_ADMIN
-CapabilityBoundingSet=~CAP_SYS_MODULE
-CapabilityBoundingSet=~CAP_SYS_TIME
-
-PrivateDevices=yes
-PrivateUsers=yes
-
-ProtectControlGroups=yes
-ProtectHome=yes
-ProtectKernelLogs=yes
-ProtectKernelModules=yes
-ProtectKernelTunables=yes
-ProtectSystem=yes
-
-###SystemCallFilter=~@clock
-###SystemCallFilter=~@debug
-###SystemCallFilter=~@module
-###SystemCallFilter=~@mount
-###SystemCallFilter=~@raw-io
-###SystemCallFilter=~@reboot
-###SystemCallFilter=~@swap
-###SystemCallFilter=~@privileged
-###SystemCallFilter=~@resources
-
-CapabilityBoundingSet=~CAP_KILL
-
-CapabilityBoundingSet=~CAP_NET_BIND_SERVICE
-CapabilityBoundingSet=~CAP_NET_BROADCAST
-CapabilityBoundingSet=~CAP_NET_RAW
-CapabilityBoundingSet=~CAP_SYS_NICE
-CapabilityBoundingSet=~CAP_SYS_RESOURCE
-
-
+Restart=on-failure
+Sockets=mc_server.socket
+StandardInput=socket
+StandardOutput=journal
+StandardError=journal
 
 
 [Install]
 WantedBy=default.target
-
