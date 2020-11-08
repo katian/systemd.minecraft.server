@@ -1,0 +1,6 @@
+# /home/mc_user/.config/systemd/user/mc_server.socket
+[Unit]
+PartOf=mc_server.service
+
+[Socket]
+ListenFIFO=/tmp/mc_server.stdin
