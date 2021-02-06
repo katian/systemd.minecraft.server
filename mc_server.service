@@ -1,3 +1,4 @@
+# /home/mc_user/.config/systemd/user/mc_server.service
 [Unit]
 Description=Minecraft Server
 
