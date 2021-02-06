@@ -1,15 +1,14 @@
-# /home/mc_user/.config/systemd/user/mc_server.service
 [Unit]
 Description=Minecraft Server
 
 [Service]
 Type=simple
 WorkingDirectory=/home/mc_user/mc_server
-ExecStart=java -Xmx3G -Xms3G -jar /home/mc_user/mc_server/server.jar nogui
-ExecStop=/bin/bash -c 'echo "arret du serveur"'
-ExecStop=/bin/bash -c 'echo /save-all > /tmp/mc_server.stdin'
-ExecStop=/bin/bash -c 'echo /stop > /tmp/mc_server.stdin'
-ExecStop=/bin/bash -c 'while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done'
+ExecStart=java -Xmx6G -Xms6G -jar /home/mc_user/mc_server/server.jar nogui
+ExecStop=bash -c 'echo "arret du serveur"'
+ExecStop=bash -c 'echo /save-all > /tmp/mc_server.stdin'
+ExecStop=bash -c 'echo /stop > /tmp/mc_server.stdin'
+ExecStop=bash -c 'while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done'
 
 TimeoutStopSec=180
 
