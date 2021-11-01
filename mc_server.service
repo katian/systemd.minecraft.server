@@ -1,0 +1,24 @@
+[Unit]
+Description=Minecraft Server
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mc_user/mc_server
+ExecStart=java -Xmx6G -Xms6G -jar /home/mc_user/mc_server/server.jar nogui
+ExecStop=bash -c 'echo "arret du serveur"'
+ExecStop=bash -c 'echo /save-all > /tmp/mc_server.stdin'
+ExecStop=bash -c 'echo /stop > /tmp/mc_server.stdin'
+ExecStop=bash -c 'while ps -p $MAINPID > /dev/null; do /bin/sleep 1; done'
+
+TimeoutStopSec=180
+
+Restart=on-failure
+Sockets=mc_server.socket
+StandardInput=socket
+StandardOutput=journal
+StandardError=journal
+
+
+[Install]
+WantedBy=default.target
+
